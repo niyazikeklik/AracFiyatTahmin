@@ -1,0 +1,56 @@
+﻿@using AracFiyatTahmin.Models;
+@model List<aracTable>
+@{
+    ViewBag.Title = "Table";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-3">
+    <div class="card rounded">
+        <h4 class="card-header">Table</h4>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Nick</th>
+                        <th scope="col">Model Yılı</th>
+                        <th scope="col">Yakıt Türü</th>
+                        <th scope="col">Vites</th>
+                        <th scope="col">Beygir Gücü</th>
+                        <th scope="col">Durum</th>
+                        <th scope="col">Kilometre</th>
+                        <th scope="col">Fiyat</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+
+                        foreach (var item in Model)
+                        {
+
+                            <tr>
+                                @{string resimismi = item.islemdogruluk == "1" ? "btrue.png" : "false.png";}
+                                <th scope="row"><img src="~/images/@resimismi" style="width:28px; height:28px;" />  @item.islemno</th>
+                                <th scope="row">@item.islemiyapan</th>
+                                <th scope="row">@item.modelyili</th>
+                                <th scope="row">@item.yakitturu</th>
+                                <th scope="row">@item.vites</th>
+                                <th scope="row">@item.beygirgucu</th>
+                                <th scope="row">@item.durum</th>
+                                <th scope="row">@item.km KM</th>
+                                <th scope="row">@item.fiyat TL</th>
+                            </tr>
+
+
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("tablea").style.cssText = "text-decoration: none;background-color: cornflowerblue;font-size: large;color: white;";
+</script>

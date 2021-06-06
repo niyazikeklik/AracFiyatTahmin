@@ -1,0 +1,262 @@
+﻿
+
+@using AracFiyatTahmin.Models;
+
+@model List<aracTable>
+
+@{
+    bool islemyap = ViewBag.islem;
+    ViewBag.Title = "Home Page";
+    aracTable soneklenenn = ViewBag.soneklenen;
+    double oran = ViewBag.oran;
+}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4 mt-3">
+            <div class="card rounded">
+                <h4 class="card-header">Hesaplama</h4>
+                <div class="card-body">
+                    <form method="post">
+                        <span>Nick: <input name="islemiyapan" type="text" maxlength="40" class="form-control" required></span>
+                        <span>Model yılı: <input name="modelyili" type="number" min="2000" max="2021" class="form-control" placeholder="2000 - 2021 Arası" required></span>
+                        <label for="inputState1" class="form-label">Yakıt Türü</label>
+                        <select id="inputState1" name="yakitturu" class="form-select">
+                            <option value="0">Benzin</option>
+                            <option value="1">Dizel</option>
+                            <option value="2">Benzin/LPG</option>
+
+                        </select>
+                        <label for="inputState2" class="form-label">Vites</label>
+                        <select id="inputState2" name="vites" class="form-select">
+                            <option value="0">Düz</option>
+                            <option value="1">Otomatik</option>
+                            <option value="2">Yarı otomatik</option>
+                        </select>
+                        <label for="inputState3" class="form-label">Beygir Gücü</label>
+                        <select id="inputState3" name="beygirgucu" class="form-select">
+
+
+                            <option value="1">100 BG ve altı</option>
+                            <option value="2">101-125 BG</option>
+                            <option value="3">126-150 BG</option>
+                            <option value="4">151-175 BG'</option>
+                            <option value="5">176-200 BG</option>
+                            <option value="6">201-225 BG</option>
+                            <option value="7">226-250 BG</option>
+                            <option value="8">251-275 BG</option>
+                            <option value="9">276-300 BG</option>
+                            <option value="10">301-325 BG</option>
+                            <option value="11">326-350 BG</option>
+                            <option value="12">376-400 BG</option>
+                            <option value="13">451-475 BG</option>
+                            <option value="16">601 BG ve üzeri</option>
+
+
+                        </select>
+                        <label for="inputState4" class="form-label">Durum</label>
+                        <select id="inputState4" name="durum" class="form-select secicim">
+
+                            <option value="0">Sıfır kilometre</option>
+                            <option value="1">İkinci el</option>
+                            <option value="2">Hasarlı</option>
+
+
+
+                        </select>
+
+                        <span>Kilometre: <input id="kmgir" value="0" name="km" type="number" min="0" max="1000000" class="form-control" disabled required></span>
+                        <button id="buton1" onclick="goster()" class="btn btn-primary form-control mt-5">Hesapla</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8 mt-3">
+            <div class="row">
+                @if (islemyap == true)
+                {
+                    <div class="col-md-12">
+                        <div class="card rounded">
+                            <h4 class="card-header text-danger">Sonuç</h4>
+                            <div class="card-body">
+                                <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+                                <table class="table table-striped table-xl">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Nick</th>
+                                            <th scope="col">Model Yılı</th>
+                                            <th scope="col">Yakıt Türü</th>
+                                            <th scope="col">Vites</th>
+                                            <th scope="col">Beygir Gücü</th>
+                                            <th scope="col">Durum</th>
+                                            <th scope="col">Kilometre</th>
+                                            <th scope="col">Fiyat</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">@soneklenenn.islemno</th>
+                                            <th scope="row">@soneklenenn.islemiyapan</th>
+                                            <th scope="row">@soneklenenn.modelyili</th>
+                                            <th scope="row">@soneklenenn.yakitturu</th>
+                                            <th scope="row">@soneklenenn.vites</th>
+                                            <th scope="row">@soneklenenn.beygirgucu</th>
+                                            <th scope="row">@soneklenenn.durum</th>
+                                            <th scope="row">@soneklenenn.km KM</th>
+                                            <th scope="row">@soneklenenn.fiyat TL</th>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <form action="@Url.Action("cevap")" method="post">
+                                    <table style="border: none" cellpadding="0" cellspacing="0" width="100%">
+                                        <tr>
+                                            <td style="padding: 15px 0">
+                                                <table style="border: none; margin-left: auto; margin-right: auto" cellpadding="0" cellspacing="0" width="600" class="content">
+                                                    <tr>
+                                                        <td class="information notification">
+                                                            <h1><span class="icon">i</span>Tahminimiz yaklaştı mı?</h1>
+                                                            <p>Yapay zekamızı geliştirmek için gerçek piyasa fiyatıyla, yapay zekamızın tahminini kıyaslasan iyi iş çıkardığını düşünür müydün?</p>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <center>
+                                        <div id="soru">
+                                            <div class="text-right">
+                                                <input value="@soneklenenn.islemno" name="id" style="display:none;" />
+                                                <button value="0" name="veri" id="cancel" class="dialog-btn btn-cancel" style="background-color: #0d6efd; color: white;">
+                                                    Hayır
+                                                </button>
+                                                <button value="1" name="veri" id="confirm" class="dialog-btn btn-primary" style="background-color: #0d6efd; color: white;">
+                                                    Evet
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </center>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-12">
+                    <div class="card rounded">
+                        <h4 class="card-header">İşlemler</h4>
+                        <div class="card-body">
+                            <center>
+                                <h4 class="card-title" style="color:red;">Başarı Yüzdemiz</h4>
+                                <div class="chart" id="graph" data-percent="@oran"></div>
+                            </center>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Nick</th>
+                                        <th scope="col">Model Yılı</th>
+                                        <th scope="col">Yakıt Türü</th>
+                                        <th scope="col">Vites</th>
+                                        <th scope="col">Beygir Gücü</th>
+                                        <th scope="col">Durum</th>
+                                        <th scope="col">Kilometre</th>
+                                        <th scope="col">Fiyat</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{int count = 0; }
+                                    @foreach (var islemm in Model)
+                                    {
+                                        if (count == 5) { break; }
+                                        count++;
+                                    <tr>
+                                        @{string resimismi = islemm.islemdogruluk == "1" ? "btrue.png" : "false.png";}
+                                        <th scope="row"><img src="~/images/@resimismi" style="width:28px; height:28px" /> @islemm.islemno</th>
+                                        <th scope="row">@islemm.islemiyapan</th>
+                                        <th scope="row">@islemm.modelyili</th>
+                                        <th scope="row">@islemm.yakitturu</th>
+                                        <th scope="row">@islemm.vites</th>
+                                        <th scope="row">@islemm.beygirgucu</th>
+                                        <th scope="row">@islemm.durum</th>
+                                        <th scope="row">@islemm.km KM</th>
+                                        <th scope="row">@islemm.fiyat TL</th>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            <a href=@Url.Action("Table") class="btn btn-primary form-control" style="text-decoration:none; top:-100px; color:white;">Tümünü göster</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.getElementById("homea").style.cssText = "text-decoration: none;background-color: cornflowerblue;font-size: large;color: white;";
+
+    function sifirKM() {
+        document.getElementById("kmgir").setAttribute("min", "0");
+        $("#kmgir").val("0");
+        document.getElementById("kmgir").disabled = true;
+    }
+    sifirKM();
+
+    $(document).on('change', "#inputState4", function () {
+        if ($(this).val() == 0) {
+            sifirKM();
+        }
+        else {
+            document.getElementById("kmgir").setAttribute("min", "1000");
+            $("#kmgir").val("1000");
+            document.getElementById("kmgir").disabled = false;
+        }
+    });
+    function gizle() {
+       @islemyap = false;
+    }
+
+
+    var el = document.getElementById('graph'); // get canvas
+
+    var options = {
+        percent: el.getAttribute('data-percent') || 25,
+        size: el.getAttribute('data-size') || 220,
+        lineWidth: el.getAttribute('data-line') || 15,
+        rotate: el.getAttribute('data-rotate') || 0
+    }
+
+    var canvas = document.createElement('canvas');
+    var span = document.createElement('span');
+    span.textContent = options.percent + '%';
+
+    if (typeof (G_vmlCanvasManager) !== 'undefined') {
+        G_vmlCanvasManager.initElement(canvas);
+    }
+
+    var ctx = canvas.getContext('2d');
+    canvas.width = canvas.height = options.size;
+
+    el.appendChild(span);
+    el.appendChild(canvas);
+
+    ctx.translate(options.size / 2, options.size / 2); // change center
+    ctx.rotate((-1 / 2 + options.rotate / 180) * Math.PI); // rotate -90 deg
+
+    //imd = ctx.getImageData(0, 0, 240, 240);
+    var radius = (options.size - options.lineWidth) / 2;
+
+    var drawCircle = function (color, lineWidth, percent) {
+        percent = Math.min(Math.max(0, percent || 1), 1);
+        ctx.beginPath();
+        ctx.arc(0, 0, radius, 0, Math.PI * 2 * percent, false);
+        ctx.strokeStyle = color;
+        ctx.lineCap = 'round'; // butt, round or square
+        ctx.lineWidth = lineWidth
+        ctx.stroke();
+    };
+    drawCircle('#efefef', options.lineWidth, 100 / 100);
+    drawCircle('#0d6efd', options.lineWidth, options.percent / 100);
+</script>
