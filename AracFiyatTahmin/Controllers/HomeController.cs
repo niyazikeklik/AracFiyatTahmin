@@ -54,21 +54,20 @@ namespace AracFiyatTahmin.Controllers
         [HttpPost]
         public ActionResult Index(aracTable yeniislem)
         {
-            yeniislem.fiyat = Convert.ToInt32(MakineOgrenmesiApi.getGender(yeniislem) * MakineOgrenmesiApi.Oran(yeniislem));
+            yeniislem.fiyat = Convert.ToInt32(MakineOgrenmesiApi.getFiyat(yeniislem) * 
+                MakineOgrenmesiApi.Oran(yeniislem));
 
             int indisBeygırGucu = int.Parse(yeniislem.beygirgucu);
             int indisDurum = int.Parse(yeniislem.durum);
             int indisVites = int.Parse(yeniislem.vites);
             int indisYakitturu = int.Parse(yeniislem.yakitturu);
 
-
-
-
             yeniislem.beygirgucu = beygirgucleri[indisBeygırGucu - 1];
             yeniislem.durum = durumlar[indisDurum];
             yeniislem.vites = vitesler[indisVites];
             yeniislem.yakitturu = yakitturleri[indisYakitturu];
             yeniislem.islemdogruluk = "1";
+
             db.arac.Add(yeniislem);
             db.SaveChanges();
 

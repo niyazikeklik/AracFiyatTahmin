@@ -6,20 +6,29 @@ namespace AracFiyatTahmin
 {
     public static class MakineOgrenmesiApi
     {
-
-        public static int getGender(aracTable yeniislem)
+        private static string veriyiAyikla(string response)
         {
-            string urlParameters = "http://f5040d08-6255-41bf-9665-f8612b202cda.westeurope.azurecontainer.io/score?data=[[" + yeniislem.modelyili + "," + yeniislem.yakitturu + "," + yeniislem.vites + "," + yeniislem.beygirgucu + "," + yeniislem.durum + "," + yeniislem.km + "]]";
-            WebClient wb = new WebClient();
-            var response = wb.DownloadString(urlParameters);
             int basla = response.IndexOf("[") + 1;
             int bitis = response.IndexOf("]", basla);
             string ayıklanan = response.Substring(basla, bitis - basla);
             ayıklanan = ayıklanan.Substring(0, ayıklanan.IndexOf('.'));
-            int fiyat = int.Parse(ayıklanan);
-            Random rastgele = new Random();
-            int sayi = rastgele.Next(25000, 1000000);
-            sayi = sayi - (sayi % 10000);
+            return ayıklanan;
+        }
+        public static int getFiyat(aracTable yeniislem)
+        {
+            string apiLink = "http://f5040d08-6255-41bf-9665-f8612b202cda."+
+                "westeurope.azurecontainer.io/score?data=[[";
+
+            string urlParameters = apiLink +
+                yeniislem.modelyili + "," + yeniislem.yakitturu + "," +
+                yeniislem.vites + "," + yeniislem.beygirgucu + "," +
+                yeniislem.durum + "," + yeniislem.km + "]]";
+
+            WebClient wb = new WebClient();
+            string response = wb.DownloadString(urlParameters);
+
+            int fiyat = int.Parse(veriyiAyikla(response));
+
             return fiyat;
         }
         static public double Oran(aracTable yeniislem)
